@@ -1,17 +1,28 @@
 import PropTypes from 'prop-types';
 import { Component } from 'react';
-import { Form, Field, Formik } from 'formik';
+import { Form, Field, Formik, ErrorMessage } from 'formik';
 import { Box } from 'components/Box/Box';
 import { InputTitle, InputField, AddBtn } from './ContactForm.styled';
+import * as yup from 'yup';
+
+let schema = yup.object().shape({
+  name: yup.string().required(),
+  number: yup.number().required().positive().integer(),
+});
 
 class ContactForm extends Component {
-  initialValues = {
-    name: '',
-    number: '',
-  };
   render() {
+    const { onSubmit } = this.props;
+
     return (
-      <Formik initialValues={this.initialValues} onSubmit={this.props.submit}>
+      <Formik
+        initialValues={{
+          name: '',
+          number: '',
+        }}
+        validationSchema={schema}
+        onSubmit={onSubmit}
+      >
         <Form autoComplete="off">
           <Box
             display="flex"
@@ -26,8 +37,8 @@ class ContactForm extends Component {
                 name="name"
                 pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
                 title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-                required
               />
+              <ErrorMessage component="div" name="name" />
             </InputField>
             <InputField htmlFor="number">
               <InputTitle>Phone</InputTitle>
@@ -36,8 +47,8 @@ class ContactForm extends Component {
                 name="number"
                 pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
                 title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-                required
               />
+              <ErrorMessage component="div" name="number" />
             </InputField>
             <AddBtn type="submit">Add Contact</AddBtn>
           </Box>
@@ -48,7 +59,7 @@ class ContactForm extends Component {
 }
 
 ContactForm.propTypes = {
-  submit: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
 };
 
 export { ContactForm };

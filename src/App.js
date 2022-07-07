@@ -17,11 +17,6 @@ class App extends Component {
     filter: '',
   };
 
-  initialValues = {
-    name: '',
-    number: '',
-  };
-
   getFiltredContact = () => {
     const { contacts, filter } = this.state;
     const lowerCasedFilter = filter.toLowerCase();
@@ -35,7 +30,7 @@ class App extends Component {
     this.setState({ filter: e.currentTarget.value });
   };
 
-  addContact = ({ name, number }) => {
+  handelContactSubmit = ({ name, number }) => {
     const newContact = {
       id: nanoid(),
       name: name,
@@ -84,7 +79,7 @@ class App extends Component {
             overflow="hidden"
           >
             <h1>PhoneBook</h1>
-            <ContactForm submit={this.addContact} />
+            <ContactForm onSubmit={this.handelContactSubmit} />
             <ContactsTitle />
             <Filter getName={this.setFilterName} value={filter} />
             <ContactsList
